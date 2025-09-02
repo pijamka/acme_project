@@ -4,7 +4,8 @@ from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from django.urls import include, path, reverse_lazy
-
+if settings.DEBUG:
+    import debug_toolbar
 urlpatterns = [
     path('', include('pages.urls')),
     path('admin/', admin.site.urls),
@@ -18,5 +19,14 @@ urlpatterns = [
         ),
         name='registration',
     ),
+    path('__debug__/', include(debug_toolbar.urls)),
     path('birthday/', include('birthday.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+handler404 = 'core.views.page_not_found'
+
+if settings.DEBUG:
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
